@@ -18,7 +18,6 @@ func verify_position(direction :Vector2) -> void:
 
 # Verifica o vetor de movimantação para definir sua animação
 func horizontal_behavior(direction :Vector2) -> void:
-	print(animation)
 	if direction.x != 0:
 		animation.play("Run")
 	else: 
