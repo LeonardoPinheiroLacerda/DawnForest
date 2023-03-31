@@ -22,7 +22,7 @@ _global_script_classes=[ {
 "base": "Sprite",
 "class": "PlayerTexture",
 "language": "GDScript",
-"path": "res://scenes/player/Texture.gd"
+"path": "res://scripts/player/Texture.gd"
 } ]
 _global_script_class_icons={
 "Background": "",
