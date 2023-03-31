@@ -10,6 +10,8 @@ export(int) var speed = 75
 func _physics_process(delta: float):
 	horizontal_movement_env()
 	velocity = move_and_slide(velocity)
+	
+	player_sprite.animate(velocity)
 
 
 func horizontal_movement_env() -> void:

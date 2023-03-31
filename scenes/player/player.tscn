@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/player/char_red.png" type="Texture" id=1]
 [ext_resource path="res://scripts/player/player.gd" type="Script" id=2]
+[ext_resource path="res://scenes/player/Texture.gd" type="Script" id=3]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Idle"
@@ -60,6 +61,7 @@ script = ExtResource( 2 )
 texture = ExtResource( 1 )
 hframes = 8
 vframes = 11
+script = ExtResource( 3 )
 
 [node name="Animation" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Texture")
