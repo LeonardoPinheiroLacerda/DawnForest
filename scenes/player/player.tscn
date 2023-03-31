@@ -133,3 +133,5 @@ current = true
 limit_top = 0
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
+
+[connection signal="animation_finished" from="Animation" to="Texture" method="_on_animation_finished"]

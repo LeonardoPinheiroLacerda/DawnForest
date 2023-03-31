@@ -1,18 +1,18 @@
 extends KinematicBody2D
 class_name Player
 
+const MAX_JUMP_COUNT = 2
+
 onready var player_sprite: Sprite = get_node("Texture")
 
 var velocity: Vector2
 
 var jump_count: int = 0
-const MAX_JUMP_COUNT = 2
 
 var landing: bool = false
 
 export(int) var speed = 75
 export(int) var jump_speed = -175
-
 export(int) var player_gravity = 350
 
 func _physics_process(delta: float):
