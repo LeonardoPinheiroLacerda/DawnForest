@@ -10,6 +10,11 @@ var velocity: Vector2
 var jump_count: int = 0
 
 var landing: bool = false
+var attacking: bool = false
+var defending: bool = false
+var crouching: bool = false
+
+var can_track_input: bool = true
 
 export(int) var speed = 75
 export(int) var jump_speed = -175
@@ -18,6 +23,9 @@ export(int) var player_gravity = 350
 func _physics_process(delta: float):
 	horizontal_movement_env()
 	vertical_movement_env()
+	
+	actions_env()
+	
 	gravity(delta)
 	
 	# Primeiro argumento é o vetor de movimentação do personagem
@@ -40,6 +48,10 @@ func horizontal_movement_env() -> void:
 	# Realiza uma operação para definir a qual direção o personagem deve andar
 	var input_direction: float = right_strength - left_strength
 	
+	if not can_track_input or attacking:
+		velocity.x = 0
+		return
+	
 	# Atribui o valor calculado ao atributo X do vetor de movimentação multiplicando
 	# pela velocidade configurada
 	velocity.x = input_direction * speed
@@ -50,14 +62,46 @@ func vertical_movement_env() -> void:
 	if is_on_floor():
 		jump_count = 0
 	
+	var jump_condition: bool = can_track_input and not attacking
+	
 	# Ao apertar espaço e se ainda houver pulos disponiveis...
-	if Input.is_action_just_pressed("jump") and jump_count < MAX_JUMP_COUNT:
+	if Input.is_action_just_pressed("jump") and jump_count < MAX_JUMP_COUNT and jump_condition:
 		# Incrementa a quantidade de pulos efetuados desde a ultima vez que o personagem
 		# colidiu com o chão
 		jump_count += 1
 		# Incrementa a velocidade de pulo
 		velocity.y = jump_speed
 
+func actions_env() -> void:
+	attack()
+	crouch()
+	defense()
+
+func attack() -> void:
+	var attack_condition: bool = not attacking and not crouching and not defending
+	
+	if Input.is_action_just_pressed("attack") and attack_condition and is_on_floor():
+		attacking = true
+		player_sprite.normal_attack = true
+
+func crouch() -> void:
+	if Input.is_action_pressed("crouch") and is_on_floor() and not defending:
+		crouching = true
+		can_track_input = false
+	elif not defending:
+		crouching = false
+		can_track_input = true
+		player_sprite.crouching_off = true
+
+func defense() -> void:
+	if Input.is_action_pressed("defense") and is_on_floor() and not crouching:
+		defending = true
+		can_track_input = false
+	elif not crouching:
+		defending = false
+		can_track_input = true
+		player_sprite.shield_off = true
+		
 
 # Impõe gravidade ao personagem
 func gravity(delta: float) -> void:
