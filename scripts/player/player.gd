@@ -48,6 +48,7 @@ func horizontal_movement_env() -> void:
 	# Realiza uma operação para definir a qual direção o personagem deve andar
 	var input_direction: float = right_strength - left_strength
 	
+	# Se estiver atacando ou com a flag can_track_input o personagem não deve andar
 	if not can_track_input or attacking:
 		velocity.x = 0
 		return
@@ -62,6 +63,7 @@ func vertical_movement_env() -> void:
 	if is_on_floor():
 		jump_count = 0
 	
+	# Se estiver atacando ou com a flag can_track_input o personagem não deve pular
 	var jump_condition: bool = can_track_input and not attacking
 	
 	# Ao apertar espaço e se ainda houver pulos disponiveis...
@@ -72,31 +74,49 @@ func vertical_movement_env() -> void:
 		# Incrementa a velocidade de pulo
 		velocity.y = jump_speed
 
+# Verifica inputs de ação (ataque, defender e agachar)
 func actions_env() -> void:
 	attack()
 	crouch()
 	defense()
 
+# Função para mapear ataque
 func attack() -> void:
+	# Só é possivel atacar se não estiver executando nenhuma outra ação
 	var attack_condition: bool = not attacking and not crouching and not defending
 	
 	if Input.is_action_just_pressed("attack") and attack_condition and is_on_floor():
+		# Se cumprir todos os requesitos será setado algumas boleans que serão utilizadas 
+		# no script da sprite
 		attacking = true
 		player_sprite.normal_attack = true
 
+# Função para mapear agachar
 func crouch() -> void:
+	
+	# Se pressionar o botão de aganhar e não estiver defendendo
 	if Input.is_action_pressed("crouch") and is_on_floor() and not defending:
+		# Setando valores que serão utilizados no script da sprite
 		crouching = true
 		can_track_input = false
+	# Se não estiver pressionando o botão de agachar e nao estiver defendendo
+	# Irá setar valores que cancelam o agachamento
 	elif not defending:
+		# Setando valores que serão utilizados no script da sprite
 		crouching = false
 		can_track_input = true
 		player_sprite.crouching_off = true
 
+# Função para mapear defesa
 func defense() -> void:
+	
+	# Se pressionar o botão de defesa e não estiver agachado
 	if Input.is_action_pressed("defense") and is_on_floor() and not crouching:
+		# Setando valores que serão utilizados no script da sprite
 		defending = true
 		can_track_input = false
+	# Se não estiver pressionando o botão de defesa e nao estiver agachado
+	# Irá setar valores que cancelam a defesa
 	elif not crouching:
 		defending = false
 		can_track_input = true

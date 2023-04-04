@@ -46,12 +46,16 @@ func vertical_behavior(direction: Vector2) -> void:
 	else: 
 		animation.play("Jump")
 
+# Tratamento de animações de ação
 func action_behavior() -> void: 
+	# Se estiver executando um ataque normal
 	if player.attacking and normal_attack:
 		animation.play("Attack" + attack_sufix)
+	# Se estiver efetuando a ação de defesa
 	elif player.defending and shield_off:
 		animation.play("Shield")
 		shield_off = false
+	# Se estiver efetuando a ação de agachar
 	elif player.crouching and crouching_off:
 		animation.play("Crouch")
 		crouching_off = false
@@ -62,12 +66,9 @@ func _on_animation_finished(anim_name: String):
 		"Landing": 
 			player.landing = false
 			player.set_physics_process(true)
-			
 		"AttackRight":
 			player.attacking = false
 			normal_attack = false
-			
-			
 		"AttackLeft":
 			normal_attack = false
 			player.attacking = false
